@@ -18,7 +18,7 @@ export default function Home() {
     <View className="flex-1 pt-8">
 
       <Header title="Faça seu Pedido" cartQuantityItems={5} />
-      <Text className="text-white text-2xl text-center font-heading" >Bienvenido al Chuin Menu😻</Text>
+      {/* <Text className="text-white text-2xl text-center font-heading" >Bienvenido al Chuin Menu😻</Text> */}
 
       <FlatList
         data={CATEGORIES}
