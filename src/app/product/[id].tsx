@@ -1,7 +1,9 @@
 import React from "react";
 import { Feather } from "@expo/vector-icons"
 import { Image, Text, View } from "react-native";
-import { useLocalSearchParams, useNavigation } from "expo-router"
+import { useLocalSearchParams, useNavigation, Redirect } from "expo-router"
+
+
 
 import { Button } from "@/components/button";
 import { PRODUCTS } from "@/utils/data/products";
@@ -16,35 +18,55 @@ export default function Product() {
   const navigation = useNavigation()
   const { id } = useLocalSearchParams()
 
-  const product = PRODUCTS.filter((item) => item.id === id)[0]
+  const product = PRODUCTS.find((item) => item.id === id)
 
   // console.log(id)
   // console.log(cartStore.products)
 
   function handleAddToCart() {
-    cartStore.add(product)
-    navigation.goBack()
+    if (product) {
+      cartStore.add(product)
+      navigation.goBack()
+    }
   }
 
+
+  if (!product) {
+    return <Redirect href="/" />
+  }
 
   return (
     <View className="flex-1">
       <Image source={product.cover} className="w-full h-52" resizeMode="cover" />
 
-      <View className="p-5 mt-8 flex-1">
-        <Text className="text-lime-400 text-2xl font-heading my-2">
+      <View className="p-5 mt-1 flex-1">
+
+        <Text className="text-white text-2xl font-heading">
+          {product.title}
+        </Text>
+
+        <Text className="text-lime-400 text-xl font-heading my-2 text-right">
           {formatCurrency(product.price)}
+        </Text>
+
+        <Text className="text-slate-200 text-lg font-heading my-2">
+          Descrição:
         </Text>
 
         <Text className="text-slate-400 font-body text-base leading-6 mb-6">
           {product.description}
         </Text>
 
+        <Text className="text-slate-200 text-lg font-heading my-2">
+          Ingredientes:
+        </Text>
+
         {product.ingredients.map((ingredient) => (
           <Text key={ingredient} className="text-slate-400 font-body text-base leading-6">
             {"\u2022"} {ingredient}</Text>
         ))}
-        <View className="p-5 pb-8 gap-5">
+
+        <View className="p-5 pb-6 gap-5 mt-10">
 
           <Button onPress={handleAddToCart}>
 
@@ -57,7 +79,9 @@ export default function Product() {
           </Button>
 
           <LinkButton title="Voltar" href="/" />
+
         </View>
+
       </View>
     </View >
   )
